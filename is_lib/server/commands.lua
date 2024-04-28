@@ -51,13 +51,3 @@ Lib.registerCommand = function(name, permission, fillArgs, action, data)
         Core.RegisterCommand(name, permission, newAction, false, {help = data.help, arguments = data.arguments})
     end
 end
-
-Lib.registerCommand("test", "admin", true, function(source, args)
-    
-end,
-{
-    help = "Przykładowa komenda",
-    arguments = {
-        {name = "playerId", help = "ID gracza"},
-        {name = "value", help = "Wskaż liczbę"}
-}})
