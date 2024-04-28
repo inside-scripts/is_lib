@@ -5,7 +5,3 @@ A Library that facilitates the use of multiple frameworks, inventories and vario
 ## Documentation
 
 Soon
-
-## Download
-
-https://github.com/inside-scripts/is-lib/releases/latest/download/is_lib.zip
