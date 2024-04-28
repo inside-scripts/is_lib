@@ -1,12 +1,24 @@
 Lib.playAnim = function(entity, args)
     local duration = args.duration or -1
-    local flag = args.flag or 0
+    local flag = args.flag or 49
+    local blendIn = args.blendIn or 3.0
+    local blendOut = args.blendOut or 3.0
+    local playbackRate = args.playbackRate or 0
+    local lockX = args.lockX or false
+    local lockY = args.lockY or false
+    local lockZ = args.lockZ or false
 
     RequestAnimDict(args.dict)
     while not HasAnimDictLoaded(args.dict) do
         Wait(5)
     end
-    TaskPlayAnim(entity, args.dict, args.anim, 8.0, -8.0, duration, flag, 0, args.lock, args.lock, args.lock)
+    TaskPlayAnim(entity, args.dict, args.anim, blendIn, blendOut, duration, flag, playbackRate, lockX, lockY, lockZ)
+end
+
+Lib.playScenario(entity, args)
+    local enterAnim = args.enterAnim or true
+
+    TaskStartScenarioInPlace(entity, args.scenario, 0, enterAnim)
 end
 
 Lib.FaceToCoords = function(entity, handler)
