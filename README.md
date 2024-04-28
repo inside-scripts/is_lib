@@ -4,4 +4,4 @@ A Library that facilitates the use of multiple frameworks, inventories and vario
 
 ## 📚 Documentation
 
-(https://inside-scripts.gitbook.io/documentation/free-scripts/library)
+https://inside-scripts.gitbook.io/documentation/free-scripts/library
