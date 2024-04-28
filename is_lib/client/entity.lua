@@ -15,7 +15,7 @@ Lib.playAnim = function(entity, args)
     TaskPlayAnim(entity, args.dict, args.anim, blendIn, blendOut, duration, flag, playbackRate, lockX, lockY, lockZ)
 end
 
-Lib.playScenario(entity, args)
+Lib.playScenario = function(entity, args)
     local enterAnim = args.enterAnim or true
 
     TaskStartScenarioInPlace(entity, args.scenario, 0, enterAnim)
