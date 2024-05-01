@@ -9,7 +9,7 @@ exports('GetLibObject', function()
 end)
 
 Lib.checkVersion = function()
-    local resource = GetInvokingResource() or GetCurrentResourceName()
+    local resource = GetCurrentResourceName()
 
 	local currentVersion = GetResourceMetadata(resource, 'version')
 
