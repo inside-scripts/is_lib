@@ -36,6 +36,8 @@ Lib.FaceToCoords = function(entity, handler)
     return heading
 end
 
+cache = {objects = {}, peds = {}, vehicles = {}}
+
 Lib.createObj = function(hash, coords, isNetwork, options)
     if not HasModelLoaded(hash) then
         RequestModel(hash)
@@ -77,6 +79,12 @@ Lib.createObj = function(hash, coords, isNetwork, options)
             SetEntityAlpha(obj, options.alpha, false)
         end
     end
+
+    local calledBy = GetInvokingResource()
+
+    if not cache.objects[calledBy] then cache.objects[calledBy] = {} end
+
+    cache.objects[calledBy][obj] = true
 
     if not isNetwork then
         return {id = obj}
@@ -128,6 +136,12 @@ Lib.createPed = function(hash, coords, isNetwork, options)
             SetPedCanRagdoll(ped, false)
         end
     end
+
+    local calledBy = GetInvokingResource()
+
+    if not cache.peds[calledBy] then cache.peds[calledBy] = {} end
+
+    cache.peds[calledBy][ped] = true
 
     if not isNetwork then
         return {id = ped}
@@ -186,12 +200,18 @@ Lib.createVeh = function(hash, coords, isNetwork, options)
 
         if options.primaryColor and options.primaryColor.r and options.primaryColor.g and options.primaryColor.b then
             SetVehicleCustomPrimaryColour(veh, options.primaryColor.r, options.primaryColor.g, options.primaryColor.b)
-            SetVehicleModColor_1(veh, paintType[options.primaryColor.type])
+
+            local paint = paintType[options.secondaryColor.type] or paintType["normal"]
+
+            SetVehicleModColor_1(veh, paint)
         end
 
         if options.secondaryColor and options.secondaryColor.r and options.secondaryColor.g and options.secondaryColor.b then
             SetVehicleCustomSecondaryColour(veh, options.secondaryColor.r, options.secondaryColor.g, options.secondaryColor.b)
-            SetVehicleModColor_2(veh, paintType[options.secondaryColor.type])
+
+            local paint = paintType[options.secondaryColor.type] or paintType["normal"]
+
+            SetVehicleModColor_2(veh, paint)
         end
 
         if options.dirtLevel and tonumber(options.dirtLevel) then
@@ -233,6 +253,12 @@ Lib.createVeh = function(hash, coords, isNetwork, options)
         end
     end
 
+    local calledBy = GetInvokingResource()
+
+    if not cache.vehicles[calledBy] then cache.vehicles[calledBy] = {} end
+
+    cache.vehicles[calledBy][veh] = true
+
     if not isNetwork then
         return {id = veh}
     else
@@ -242,3 +268,17 @@ Lib.createVeh = function(hash, coords, isNetwork, options)
         return {id = veh, netId = netId}
     end
 end
+
+AddEventHandler("onClientResourceStop", function(resource)
+    for _, cacheType in pairs(cache) do
+        if cacheType[resource] then
+            for obj, __ in pairs(cacheType[resource]) do
+                if DoesEntityExist(obj) then
+                    DeleteEntity(obj)
+                end
+            end
+
+            cacheType[resource] = nil
+        end
+    end
+end)
