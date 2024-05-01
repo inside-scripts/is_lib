@@ -36,8 +36,6 @@ Lib.FaceToCoords = function(entity, handler)
     return heading
 end
 
-cache = {objects = {}, peds = {}, vehicles = {}}
-
 Lib.createObj = function(hash, coords, isNetwork, options)
     if not HasModelLoaded(hash) then
         RequestModel(hash)
@@ -80,16 +78,13 @@ Lib.createObj = function(hash, coords, isNetwork, options)
         end
     end
 
-    local calledBy = GetInvokingResource()
-
-    if not cache.objects[calledBy] then cache.objects[calledBy] = {} end
-
-    cache.objects[calledBy][obj] = true
-
     if not isNetwork then
         return {id = obj}
     else
-        return {id = obj, netId = NetworkGetNetworkIdFromEntity(obj)}
+        local netId = NetworkGetNetworkIdFromEntity(obj)
+        SetNetworkIdCanMigrate(netId, true)
+
+        return {id = obj, netId = netId}
     end
 end
 
@@ -137,16 +132,13 @@ Lib.createPed = function(hash, coords, isNetwork, options)
         end
     end
 
-    local calledBy = GetInvokingResource()
-
-    if not cache.peds[calledBy] then cache.peds[calledBy] = {} end
-
-    cache.peds[calledBy][ped] = true
-
     if not isNetwork then
         return {id = ped}
     else
-        return {id = ped, netId = NetworkGetNetworkIdFromEntity(ped)}
+        local netId = NetworkGetNetworkIdFromEntity(ped)
+        SetNetworkIdCanMigrate(netId, true)
+
+        return {id = ped, netId = netId}
     end
 end
 
@@ -253,12 +245,6 @@ Lib.createVeh = function(hash, coords, isNetwork, options)
         end
     end
 
-    local calledBy = GetInvokingResource()
-
-    if not cache.vehicles[calledBy] then cache.vehicles[calledBy] = {} end
-
-    cache.vehicles[calledBy][veh] = true
-
     if not isNetwork then
         return {id = veh}
     else
@@ -268,17 +254,3 @@ Lib.createVeh = function(hash, coords, isNetwork, options)
         return {id = veh, netId = netId}
     end
 end
-
-AddEventHandler("onClientResourceStop", function(resource)
-    for _, cacheType in pairs(cache) do
-        if cacheType[resource] then
-            for obj, __ in pairs(cacheType[resource]) do
-                if DoesEntityExist(obj) then
-                    DeleteEntity(obj)
-                end
-            end
-
-            cacheType[resource] = nil
-        end
-    end
-end)
