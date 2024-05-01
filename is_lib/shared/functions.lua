@@ -39,3 +39,8 @@ end
 Lib.roundTo = function(int, round)
 	return tonumber(string.format("%."..round.."f", int))
 end
+
+Lib.checkSuccess = function(chance)
+	local randomNumber = math.random() * 100
+    	return randomNumber <= chance
+end
