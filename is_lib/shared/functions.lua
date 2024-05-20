@@ -44,3 +44,16 @@ Lib.checkSuccess = function(chance)
 	local randomNumber = math.random() * 100
     	return randomNumber <= chance
 end
+
+Lib.getRandomString = function(length)
+	local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    local randomString = ""
+
+    for i = 1, length do
+        local randomIndex = math.random(#chars)
+        local randomChar = chars:sub(randomIndex, randomIndex)
+        randomString = randomString .. randomChar
+    end
+
+    return randomString
+end
