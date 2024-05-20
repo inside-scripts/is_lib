@@ -1,7 +1,7 @@
 Lib = {}
 
 exports('GetLibObject', function()
-    while not Core do
+    while cfg.Framework and not Core do
         Wait(5)
     end
 
