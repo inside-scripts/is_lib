@@ -8,7 +8,7 @@ Lib.createBlipCoords = function(coords, args)
     local name = args.name or "Example Blip"
 
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
-    SetBlipSprite(blip, args.sprite)
+    SetBlipSprite(blip, sprite)
     SetBlipDisplay(blip, display)
     SetBlipScale(blip, scale)
     SetBlipColour(blip, color)
