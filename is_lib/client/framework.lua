@@ -1,11 +1,9 @@
 if cfg.Framework then
     CreateThread(function()
         if cfg.Framework == "QBCore" then
-            while GetResourceState("qb-core") ~= "started" do
+            while not Lib.isExportAvailable("qb-core", "GetCoreObject") do
                 Wait(5)
             end
-
-            Wait(1000)
 
             Core = exports["qb-core"]:GetCoreObject()
         
@@ -13,11 +11,9 @@ if cfg.Framework then
                 TriggerEvent('is_lib:Client:OnJobUpdate', {name = job.name})
             end)
         elseif cfg.Framework == "ESX" then
-            while GetResourceState("es_extended") ~= "started" do
+            while not Lib.isExportAvailable("es_extended", "getSharedObject") do
                 Wait(5)
             end
-
-            Wait(1000)
 
             Core = exports["es_extended"]:getSharedObject()
 
