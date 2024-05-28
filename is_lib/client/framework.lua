@@ -41,5 +41,24 @@ if cfg.Framework then
 
             return PlayerData
         end
+
+        Lib.isPlayerLoaded = function()
+            PlayerData = Lib.getPlayerData()
+
+            if cfg.Framework == "QBCore" then
+                while not PlayerData.citizenid do
+                    Wait(5)
+                end
+
+                return true
+            elseif cfg.Framework == "ESX" then
+                while not PlayerData.identifier do
+                    PlayerData = Lib.getPlayerData()
+                    Wait(5)
+                end
+
+                return true
+            end
+        end
     end)
 end
