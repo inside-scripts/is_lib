@@ -57,3 +57,16 @@ Lib.getRandomString = function(length)
 
     return randomString
 end
+
+Lib.isExportAvailable = function(resource, exportName)
+    while GetResourceState(resource) ~= "started" do
+        Wait(5)
+    end
+
+    local exportAvailable = nil
+    local status, err = pcall(function()
+        exportAvailable = exports[resource][exportName]
+    end)
+
+    return status and exportAvailable ~= nil
+end
