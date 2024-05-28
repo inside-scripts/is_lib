@@ -1,4 +1,21 @@
 Lib.playAnim = function(entity, args)
+    local isNetwork = args.isNetwork or false
+
+    if isNetwork then
+        if NetworkDoesNetworkIdExist(entity) and NetworkDoesEntityExistWithNetworkId(entity) then
+            local localEntity = NetworkGetEntityFromNetworkId(entity)
+            local coords
+
+            if localEntity ~= 0 then
+                coords = GetEntityCoords(localEntity)
+            end
+
+            TriggerServerEvent("is_lib:playAnim", entity, args, coords)
+        end
+
+        return
+    end
+
     local duration = args.duration or -1
     local flag = args.flag or 49
     local blendIn = args.blendIn or 3.0
@@ -15,11 +32,62 @@ Lib.playAnim = function(entity, args)
     TaskPlayAnim(entity, args.dict, args.anim, blendIn, blendOut, duration, flag, playbackRate, lockX, lockY, lockZ)
 end
 
+RegisterNetEvent("is_lib:playAnim", function(entity, args, coords)
+    local player_coords = GetEntityCoords(PlayerPedId())
+
+    if coords and #(player_coords - coords) < 100.0 or not coords then
+        if NetworkDoesNetworkIdExist(entity) and NetworkDoesEntityExistWithNetworkId(entity) then
+            local localEntity = NetworkGetEntityFromNetworkId(entity)
+
+            if localEntity ~= 0 then
+                args.isNetwork = false
+                Lib.playAnim(localEntity, args)
+            end
+        end
+    end
+end)
+
 Lib.playScenario = function(entity, args)
     local enterAnim = args.enterAnim or true
 
     TaskStartScenarioInPlace(entity, args.scenario, 0, enterAnim)
 end
+
+Lib.playSpeech = function(entity, args)
+    local isNetwork = args.isNetwork or false
+
+    if isNetwork then
+        if NetworkDoesNetworkIdExist(entity) and NetworkDoesEntityExistWithNetworkId(entity) then
+            local localEntity = NetworkGetEntityFromNetworkId(entity)
+            local coords
+
+            if localEntity ~= 0 then
+                coords = GetEntityCoords(localEntity)
+            end
+
+            TriggerServerEvent("is_lib:playSpeech", entity, args, coords)
+        end
+
+        return
+    end
+
+    PlayPedAmbientSpeechNative(entity, args.name, args.param)
+end
+
+RegisterNetEvent("is_lib:playSpeech", function(entity, args, coords)
+    local player_coords = GetEntityCoords(PlayerPedId())
+
+    if coords and #(player_coords - coords) < 100.0 or not coords then
+        if NetworkDoesNetworkIdExist(entity) and NetworkDoesEntityExistWithNetworkId(entity) then
+            local localEntity = NetworkGetEntityFromNetworkId(entity)
+
+            if localEntity ~= 0 then
+                args.isNetwork = false
+                Lib.playSpeech(localEntity, args)
+            end
+        end
+    end
+end)
 
 Lib.FaceToCoords = function(entity, handler)
     local entity = GetEntityCoords(entity)
