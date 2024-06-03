@@ -24,7 +24,7 @@ client_scripts {
     'client/vehiclekeys.lua',
     'client/entity.lua',
     'client/blip.lua',
-    'client/interactions.lua'
+    -- 'client/interactions.lua'
 }
 
 server_scripts {
