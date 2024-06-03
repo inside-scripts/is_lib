@@ -25,22 +25,26 @@ if cfg.Framework then
 
     Lib.registerCommand = function(name, permission, fillArgs, action, data)
         local newAction = function(source, args)
-            local normalizedArgs = convertArgs(args, data.arguments)
+            local convertedArgs
 
-            if fillArgs then
-                local passedArgs = getArgsCount(normalizedArgs)
+            if args and fillArgs and data.arguments then
+                convertedArgs = convertArgs(args, data.arguments)
+                local argsCount = getArgsCount(convertedArgs)
 
-                if passedArgs < #data.arguments then
+                if argsCount < #data.arguments then
                     TriggerClientEvent('chat:addMessage', source, {
                         color = {37, 250, 161},
                         multiline = true,
-                        args = {"WARNING", ("You provided too few arguments %s, required %s!"):format(passedArgs, #data.arguments)}
+                        args = {"WARNING", ("You provided too few arguments %s, required %s!"):format(argsCount, #data.arguments)}
                     })
+
                     return
                 end
+            elseif args and data.arguments then
+                convertedArgs = convertArgs(args, data.arguments)
             end
 
-            action(source, normalizedArgs)
+            action(source, convertedArgs)
         end
 
         if cfg.Framework == "QBCore" then
