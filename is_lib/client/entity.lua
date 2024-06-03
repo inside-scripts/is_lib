@@ -89,6 +89,24 @@ RegisterNetEvent("is_lib:playSpeech", function(entity, args, coords)
     end
 end)
 
+Lib.FaceToCoordsSmooth = function(ped, targetHeading)
+    local function normalizeHeadingDifference(heading1, heading2)
+        local diff = (heading2 - heading1 + 180) % 360 - 180
+        return diff < -180 and diff + 360 or diff
+    end
+
+    local currentHeading = GetEntityHeading(ped)
+    local headingDifference = normalizeHeadingDifference(currentHeading, targetHeading)
+
+    while math.abs(headingDifference) > 5.0 do
+        SetPedDesiredHeading(ped, targetHeading)
+        Wait(100)
+
+        currentHeading = GetEntityHeading(ped)
+        headingDifference = normalizeHeadingDifference(currentHeading, targetHeading)
+    end
+end
+
 Lib.FaceToCoords = function(entity, handler)
     local entity = GetEntityCoords(entity)
 
@@ -105,6 +123,8 @@ Lib.FaceToCoords = function(entity, handler)
 end
 
 Lib.createObj = function(hash, coords, isNetwork, options)
+    local calledBy = GetInvokingResource()
+
     if not HasModelLoaded(hash) then
         RequestModel(hash)
         while not HasModelLoaded(hash) do
@@ -147,20 +167,30 @@ Lib.createObj = function(hash, coords, isNetwork, options)
     end
 
     if not isNetwork then
+        if calledBy and cache[calledBy] then
+            cache[calledBy][obj] = true
+        end
+
         return {id = obj}
     else
         local netId = NetworkGetNetworkIdFromEntity(obj)
         SetNetworkIdCanMigrate(netId, true)
+
+        if calledBy and cache[calledBy] then
+            cache[calledBy][obj] = netId
+        end
 
         return {id = obj, netId = netId}
     end
 end
 
 Lib.createPed = function(hash, coords, isNetwork, options)
+    local calledBy = GetInvokingResource()
+    
     if not HasModelLoaded(hash) then
         RequestModel(hash)
         while not HasModelLoaded(hash) do
-            Wait(0)
+            Wait(5)
         end
     end
 
@@ -198,23 +228,37 @@ Lib.createPed = function(hash, coords, isNetwork, options)
             SetPedCanRagdollFromPlayerImpact(ped, false)
             SetPedCanRagdoll(ped, false)
         end
+
+        if options.cannotTarget then
+            SetPedCanBeTargetted(ped, false)
+        end
     end
 
     if not isNetwork then
+        if calledBy and cache[calledBy] then
+            cache[calledBy][ped] = true
+        end
+
         return {id = ped}
     else
         local netId = NetworkGetNetworkIdFromEntity(ped)
         SetNetworkIdCanMigrate(netId, true)
+
+        if calledBy and cache[calledBy] then
+            cache[calledBy][ped] = netId
+        end
 
         return {id = ped, netId = netId}
     end
 end
 
 Lib.createVeh = function(hash, coords, isNetwork, options)
+    local calledBy = GetInvokingResource()
+
     if not HasModelLoaded(hash) then
         RequestModel(hash)
         while not HasModelLoaded(hash) do
-            Wait(0)
+            Wait(5)
         end
     end
 
@@ -314,11 +358,28 @@ Lib.createVeh = function(hash, coords, isNetwork, options)
     end
 
     if not isNetwork then
+        if calledBy and cache[calledBy] then
+            cache[calledBy][veh] = true
+        end
+
         return {id = veh}
     else
         local netId = NetworkGetNetworkIdFromEntity(veh)
         SetNetworkIdCanMigrate(netId, true)
 
+        if calledBy and cache[calledBy] then
+            cache[calledBy][veh] = netId
+        end
+
         return {id = veh, netId = netId}
+    end
+end
+
+Lib.deleteEntity = function(entity, resource)
+    local calledBy = resource or GetInvokingResource()
+
+    if cache[calledBy] and cache[calledBy][entity] then
+        DeleteEntity(entity)
+        cache[calledBy][entity] = nil
     end
 end
