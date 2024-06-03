@@ -32,8 +32,8 @@ Lib.refInt = function(int)
 	return tostring(int):reverse():gsub("%d%d%d", "%1,"):reverse():gsub("^,", "")
 end
 
-Lib.missingMoney = function(num1, num2)
-	return Lib.refInt(math.floor(num1 - num2))
+Lib.missingValue = function(num1, num2)
+	return math.floor(num1 - num2)
 end
 
 Lib.roundTo = function(int, round)
