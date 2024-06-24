@@ -8,7 +8,7 @@ lua54 'yes'
 
 name 'is_lib'
 author 'inside-scripts'
-version '1.0.6'
+version '1.0.7'
 repository 'https://github.com/inside-scripts/is-lib'
 description 'A Library that facilitates the use of multiple frameworks, inventories and various systems in one. It also includes many features that enhance functionality.'
 
@@ -24,7 +24,7 @@ client_scripts {
     'client/vehiclekeys.lua',
     'client/entity.lua',
     'client/blip.lua',
-    -- 'client/interactions.lua'
+    'client/interactions.lua',
 }
 
 server_scripts {
@@ -37,5 +37,6 @@ server_scripts {
     'server/commands.lua',
     'server/callbacks.lua',
     'server/inventory.lua',
+    'server/identifier.lua',
     'server/entity.lua',
 }
