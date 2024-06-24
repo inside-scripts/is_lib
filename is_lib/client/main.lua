@@ -1,6 +1,7 @@
 Lib = {}
 cache = {}
 blips = {}
+interactions = {}
 
 exports('GetLibObject', function()
     local calledBy = GetInvokingResource()
@@ -11,11 +12,33 @@ exports('GetLibObject', function()
 
     cache[calledBy] = {}
     blips[calledBy] = {}
+    interactions[calledBy] = interactions[calledBy] or {}
 
     return Lib
 end)
 
 AddEventHandler("onClientResourceStop", function(resource)
+    if not resource then return end
+
+    local resource = tostring(resource)
+
+    if interactions[resource] then
+        local deletedInteractions = false
+
+        for _,v in pairs(interactions[resource]) do
+            if v.type == "entity" then
+                Lib.removeInteractionEntity(v.entity, nil, resource)
+                deletedInteractions = true
+            elseif v.type == "coords" then
+                Lib.removeInteractionCoords(v.name, nil, resource)
+            end
+        end
+
+        if deletedInteractions then
+            print(("[%s] has been stopped, removing interactions."):format(resource))
+        end
+    end
+
     if cache[resource] then
         local deleteEntity = false
 
