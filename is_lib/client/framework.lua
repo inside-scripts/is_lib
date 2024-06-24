@@ -26,27 +26,12 @@ if cfg.Framework then
             Wait(5)
         end
 
-        Lib.getPlayerData = function()
-            local PlayerData
-
-            if cfg.Framework == "QBCore" then
-                PlayerData = Core.Functions.GetPlayerData()
-            elseif cfg.Framework == "ESX" then
-                PlayerData = Core.GetPlayerData()
-            end
-
-            while not PlayerData do
-                Wait(5)
-            end
-
-            return PlayerData
-        end
-
         Lib.isPlayerLoaded = function()
             PlayerData = Lib.getPlayerData()
 
             if cfg.Framework == "QBCore" then
                 while not PlayerData.citizenid do
+                    PlayerData = Lib.getPlayerData()
                     Wait(5)
                 end
 
@@ -59,6 +44,18 @@ if cfg.Framework then
 
                 return true
             end
+        end
+
+        Lib.getPlayerData = function()
+            local PlayerData
+
+            if cfg.Framework == "QBCore" then
+                PlayerData = Core.Functions.GetPlayerData()
+            elseif cfg.Framework == "ESX" then
+                PlayerData = Core.GetPlayerData()
+            end
+
+            return PlayerData
         end
     end)
 end
