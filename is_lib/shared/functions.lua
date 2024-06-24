@@ -68,3 +68,15 @@ Lib.isExportAvailable = function(resource, exportName)
 
     return status and exportAvailable ~= nil
 end
+
+Lib.getTableCount = function(table)
+	local count = 0
+	
+	for _, v in pairs(table) do
+		if type(v) == "table" then
+			count = count + 1
+		end
+	end
+	
+	return count
+end
