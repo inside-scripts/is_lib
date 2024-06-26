@@ -1,5 +1,5 @@
 local function checkDefaultOptions(options) -- Checks default options and sets them if they do not exist
-    for _,v in ipairs(options) do
+    for _,v in pairs(options) do
         v.name = v.name or Lib.getRandomString(5)
         v.icon = v.icon or "fa-solid fa-user"
         v.label = v.label or "Example Label"
@@ -12,7 +12,7 @@ end
 local function findInteractionCache(type, obj, calledBy) -- Finds an interaction cache that contains this entity
     local interactionIndex, interactionCache
 
-    for i,v in ipairs(interactions[calledBy]) do
+    for i,v in pairs(interactions[calledBy]) do
         if v.type == type and v.entity == obj then
             interactionIndex = i
             interactionCache = v  
@@ -33,12 +33,12 @@ local function addInteractionCache(type, obj, options, args, calledBy) -- Adds n
     if interactionCache then
         -- Create a set to track existing option names
         local existingOptions = {}
-        for _, cacheOption in ipairs(interactionCache.options) do
+        for _, cacheOption in pairs(interactionCache.options) do
             existingOptions[cacheOption.name] = true
         end
         
         -- Add only non-existent options
-        for _, argsOption in ipairs(options) do
+        for _, argsOption in pairs(options) do
             if not existingOptions[argsOption.name] then
                 table.insert(interactions[calledBy][interactionIndex].options, argsOption)
                 existingOptions[argsOption.name] = true
@@ -63,7 +63,7 @@ local function addInteractionCache(type, obj, options, args, calledBy) -- Adds n
 end
 
 local function removeOptionFromCache(interactionIndex, interactionCache, optionName, calledBy) -- Removes an option from the cache - if the last one, it removes the entire interaction cache
-    for i,v in ipairs(interactionCache.options) do
+    for i,v in pairs(interactionCache.options) do
         if v.name == optionName then
             if interactions[calledBy][interactionIndex].options == 1 then
                 interactions[calledBy][interactionIndex] = nil
@@ -236,7 +236,7 @@ Lib.removeInteractionEntity = function(entity, optionName, calledBy)
         if cfg.Interaction == "qb-target" and Lib.isExportAvailable(cfg.Interaction, "RemoveTargetEntity") then
             if optionName then
                 local optionLabel
-                for i,v in ipairs(interactionCache.options) do -- Removes an option from the cache - if the last one, it removes the entire option and return label for qbtarget to delete
+                for i,v in pairs(interactionCache.options) do -- Removes an option from the cache - if the last one, it removes the entire option and return label for qbtarget to delete
                     if v.name == optionName then
                         optionLabel = v.label
                         if interactions[calledBy][interactionIndex].options == 1 then
@@ -261,7 +261,7 @@ Lib.removeInteractionEntity = function(entity, optionName, calledBy)
                 exports[cfg.Interaction]:removeLocalEntity(entity)
                 interactions[calledBy][interactionIndex] = nil
             end
-        elseif cfg.Interaction == "is_interaction" and Lib.isExportAvailable(cfg.Interaction, "addInteractionLocalEntity") then
+        elseif cfg.Interaction == "is_interaction" and Lib.isExportAvailable(cfg.Interaction, "removeLocalEntity") then
             if optionName then
                 removeOptionFromCache(interactionIndex, interactionCache, optionName, calledBy)
                 exports["is_interaction"]:removeLocalEntity(entity, "is_lib:"..entity, optionName)
