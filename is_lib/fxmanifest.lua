@@ -8,7 +8,7 @@ lua54 'yes'
 
 name 'is_lib'
 author 'inside-scripts'
-version '1.0.7'
+version '1.0.8'
 repository 'https://github.com/inside-scripts/is-lib'
 description 'A Library that facilitates the use of multiple frameworks, inventories and various systems in one. It also includes many features that enhance functionality.'
 
