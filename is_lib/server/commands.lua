@@ -50,10 +50,13 @@ if cfg.Framework then
         if cfg.Framework == "QBCore" then
             Core.Commands.Add(name, data.help, data.arguments, false, newAction, permission)
         elseif cfg.Framework == "ESX" then
-            for _, v in ipairs(data.arguments) do
-                v.type = "any" 
+            if data.arguments then
+                for _, v in pairs(data.arguments) do
+                    v.type = "any" 
+                end
             end
-            Core.RegisterCommand(name, permission, newAction, false, {help = data.help, arguments = data.arguments})
+
+            Core.RegisterCommand(name, permission, newAction, false, {help = data.help or nil, arguments = data.arguments or nil})
         end
     end
 end
