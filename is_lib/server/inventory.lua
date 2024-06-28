@@ -17,7 +17,7 @@ if cfg.Inventory then
                 hasItem = {label = item.label, count = item.amount}
             end
         elseif cfg.Inventory == "ox_inventory" then
-            local item = exports["qb-inventory"]:GetItem(source, itemName)
+            local item = exports["ox_inventory"]:GetItem(source, itemName)
 
             if item and item.count and item.count > 0 then
                 hasItem = {label = item.label, count = item.count}
