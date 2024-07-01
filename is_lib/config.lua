@@ -7,6 +7,6 @@ cfg.Time                 = {                  -- The time is retrieved directly 
 
 cfg.Framework            = "QBCore"           -- "QBCore", "ESX", nil
 cfg.Interaction          = "is_interaction"   -- "is_interaction", "qb-target", "ox_target"
-cfg.Inventory            = "qb-inventory"     -- "qb-inventory", "ox_inventory", "qs-inventory", "ps-inventory", "lj-inventory", "origen_inventory", "codem-inventory", "ESX"
+cfg.Inventory            = "qb-inventory"     -- "qb-inventory", "ox_inventory", "qs-inventory", "ps-inventory", "lj-inventory", "origen_inventory", "codem-inventory", "core_inventory", "ESX"
 cfg.Fuel                 = "LegacyFuel"       -- "LegacyFuel", "cdn-fuel", "ps-fuel", "okokGasStation", "ox_fuel", "lj-fuel", "hyon_gas_station", "ND_Fuel", "myFuel"
 cfg.VehicleKeys          = "qb-vehiclekeys"   -- "qb-vehiclekeys", "qs-vehiclekeys", "vehicles_keys", "mk_vehiclekeys", "wasabi_carlock", "cd_garage", "okokGarage"
