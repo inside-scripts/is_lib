@@ -36,6 +36,13 @@ if cfg.Inventory then
                 local itemLabel = exports['codem-inventory']:GetItemLabel(itemName)
                 hasItem = {label = itemLabel, count = itemCount}
             end
+        elseif cfg.Inventory == "core_inventory" then
+            local CID = Lib.getCitizen(source)
+            local item = exports['core_inventory']:getItem('content-'..CID, itemName)
+
+            if item ~= nil and item.count and item.count > 0 then
+                hasItem = {label = item.label, count = item.count}
+            end
         elseif cfg.Inventory == "ESX" and cfg.Framework == "ESX" then
             local player = Core.GetPlayerFromId(source)
 
